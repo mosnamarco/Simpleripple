@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bubble radiance</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      background-color: black; /* Set background color to black */
+    }
+    #canvas {
+      display: block;
+    }
+  </style>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let reverse = false;
+    let animationRunning = false;
+
+    let circles = [];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    canvas.addEventListener("click", (event) => {
+      circles.push({
+        x: event.clientX,
+        y: event.clientY,
+        size: 10,
+      });
+      if (!animationRunning) {
+        animationRunning = true;
+        requestAnimationFrame(draw);
+      }
+    });
+
+    function draw() {
+      ctx.reset()
+
+      circles.forEach((circle) => {
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circle.size, 0, 2 * Math.PI);
+        ctx.strokeStyle = "white"; // Set stroke style to white
+        ctx.lineWidth = 2
+        ctx.stroke(); // Draw the circle ring
+        
+        circle.size += 1;
+
+        if (circle.size >= Math.max(canvas.height, canvas.width))
+          circles.splice(circles.indexOf(circle), 1);
+      });
+
+      if (circles.length > 0) {
+        requestAnimationFrame(draw);
+      } else {
+        animationRunning = false;
+      }
+    }
+  </script>
+</body>
+</html>
